@@ -1,0 +1,20 @@
+﻿<vm:MainViewModel
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="clr-namespace:News.ViewModels"
+    SampleProperty="Sample Text Property Value">
+
+    <vm:MainViewModel.Folders>
+        <vm:FolderViewModel Name="Folder One">
+            <vm:FolderViewModel.Items>
+                <vm:ItemViewModel Title="test1" Author="Someone" Body="html" Unread="True"/>
+                <vm:ItemViewModel Title="test2" Author="Someone" Body="html" Unread="False"/>
+            </vm:FolderViewModel.Items>
+        </vm:FolderViewModel>
+    </vm:MainViewModel.Folders>
+    <vm:MainViewModel.ActiveItems>
+        <vm:ItemViewModel Title="test1" Author="Someone" Body="html1"/>
+        <vm:ItemViewModel Title="test2" Author="Someone" Body="html2"/>
+    </vm:MainViewModel.ActiveItems>
+
+</vm:MainViewModel>
