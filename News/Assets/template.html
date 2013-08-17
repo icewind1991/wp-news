@@ -1,0 +1,77 @@
+﻿<html>
+<head>
+<meta name = "viewport" content = "width=device-width"/>
+<style>
+body {
+	background-color: black;
+	color: white;
+	width:100%;
+	overflow:hidden
+}
+
+a {
+	color: white;
+}
+
+h2 > a {
+	text-decoration:none;
+}
+
+a,a img{
+	outline:none;
+	border:none
+}
+
+blockquote, iframe, video, div, table, tbody, tr, td, pre, code, blockquote, p, em, b {
+	width:		auto !important;
+	height:		auto !important;
+	max-width:	100% !important;
+
+	margin-left:	4px;
+	margin-right:	4px;
+}
+
+table {
+	width:90% !important;
+	table-layout:fixed;
+    margin: 0 !important;
+}
+
+img {
+	max-width: 100% !important;
+	height:		auto !important;
+}
+
+pre, code, blockquote, p, em, b {
+	white-space:	-moz-pre-wrap	!important;
+	white-space:	-pre-wrap		!important;
+	white-space:	-o-pre-wrap		!important;
+	white-space:	pre-wrap		!important;
+	word-wrap: 		break-word		!important;
+}
+
+body {
+	word-wrap: 		break-word !important;
+}
+</style>
+</head>
+<body>
+<h2><a href="%url%">%title%</a></h2>
+%body%
+<script>
+//hack for broken max-width
+var image, images = document.getElementsByTagName("img");
+for (var i = 0; i < images.length; i++) { 
+    image=images[i];
+    if(image.width > 290){
+        image.width = 290;
+    }
+    image.onload=function(){
+        if(this.width > 290){
+            this.width = 290;
+        }
+    }
+}
+</script>
+</body>
+</html>

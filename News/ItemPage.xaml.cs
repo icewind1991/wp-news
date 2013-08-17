@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -11,11 +13,29 @@ using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using News.ViewModels;
 using LinqToVisualTree;
+using Windows.ApplicationModel;
+using System.Threading.Tasks;
+using Windows.Storage;
 
 namespace News
 {
     public class HtmlStringBinding : DependencyObject
     {
+        static private string template;
+
+        static async private Task<string> getTemplate()
+        {
+            template = "";
+            string folder = Package.Current.InstalledLocation.Path;
+            string path = string.Format(@"{0}\Assets\template.html", folder);
+            StorageFile storageFile = await StorageFile.GetFileFromPathAsync(path);
+            Stream stream = await storageFile.OpenStreamForReadAsync();
+            StreamReader reader = new StreamReader(stream);
+            template = reader.ReadToEnd();
+
+            return template;
+        }
+
         public static readonly DependencyProperty HtmlStringProperty =
             DependencyProperty.RegisterAttached(
             "HtmlString",
@@ -23,18 +43,19 @@ namespace News
             typeof(HtmlStringBinding),
             new PropertyMetadata(OnHtmlStringPropertyChanged));
 
-        private static void OnHtmlStringPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private async static void OnHtmlStringPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (e.NewValue != e.OldValue)
             {
                 WebBrowser wb = (WebBrowser)d;
                 MainViewModel model = (MainViewModel)wb.DataContext;
                 ItemViewModel item = model.ActiveItem;
-                string prefix = "<meta name = \"viewport\" content = \"width=device-width\"/>";
-                prefix += "<style>body{background-color: black; color: white; width:100%;overflow:hidden}a{color: white;}h2>a{text-decoration:none;}img{width:100%;height:auto !important;}a,a img{outline:none;border:none}</style>";
-                prefix += "<h2><a href=\"" + item.Url + "\">" + item.Title + "</a></h2>";
-                string postfix = "";
-                wb.NavigateToString(prefix + (string)e.NewValue + postfix);
+                string body = await getTemplate();
+                body = body.Replace("%body%", (string)e.NewValue);
+                body = body.Replace("%url%", item.Url);
+                body = body.Replace("%title%", item.Title);
+                body = body.Replace("<img ", "<img max-width=\"100%\" ");
+                wb.NavigateToString(body);
             }
         }
 
