@@ -16,6 +16,7 @@ using LinqToVisualTree;
 using Windows.ApplicationModel;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Microsoft.Phone.Tasks;
 
 namespace News
 {
@@ -76,45 +77,46 @@ namespace News
         {
             InitializeComponent();
             DataContext = App.ViewModel;
+
+            var gl = GestureService.GetGestureListener(Browser);
+            gl.Flick += gl_Flick;
         }
 
-        private void Browser_Loaded(object sender, RoutedEventArgs e)
+        void gl_Flick(object sender, Microsoft.Phone.Controls.FlickGestureEventArgs e)
         {
-            WebBrowser wb = (WebBrowser)sender;
-            var border = wb.Descendants<Border>().Last() as Border;
+            if (Math.Abs(e.HorizontalVelocity) / 2 > Math.Abs(e.VerticalVelocity))
+            {
+                // User flicked towards left
+                if (e.HorizontalVelocity < 0)
+                {
+                    Debug.WriteLine("left");
+                }
 
-            border.ManipulationDelta += Border_ManipulationDelta;
-            border.ManipulationCompleted += Border_ManipulationCompleted;
-        }
-
-        private void Border_ManipulationCompleted(object sender,
-                                              ManipulationCompletedEventArgs e)
-        {
-            // suppress zoom
-            if (e.FinalVelocities.ExpansionVelocity.X != 0.0 ||
-                e.FinalVelocities.ExpansionVelocity.Y != 0.0)
-                e.Handled = true;
-        }
-
-        private void Border_ManipulationDelta(object sender,
-                                              ManipulationDeltaEventArgs e)
-        {
-            //Debug.WriteLine("man");
-            //// suppress zoom
-            //if (e.DeltaManipulation.Scale.X != 0.0 ||
-            //    e.DeltaManipulation.Scale.Y != 0.0)
-            //    e.Handled = true;
-
-            //// optionally suppress scrolling
-            //if (e.DeltaManipulation.Translation.X != 0.0 ||
-            //  e.DeltaManipulation.Translation.Y != 0.0)
-            //    e.Handled = true;
+                // User flicked towards right
+                if (e.HorizontalVelocity > 0)
+                {
+                    // Load the previous image
+                    Debug.WriteLine("right");
+                }
+            }
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
         }
+
+        private void Browser_Navigating(object sender, NavigatingEventArgs e)
+        {
+            if (e.Uri.ToString() != "")
+            {
+                e.Cancel = true;
+                WebBrowserTask task = new WebBrowserTask();
+                task.Uri = e.Uri;
+                task.Show();
+            }
+        }
+
     }
 
 }

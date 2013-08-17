@@ -15,6 +15,6 @@
     shell:SystemTray.IsVisible="False">
 
 
-    <phone:WebBrowser IsScriptEnabled="True" Loaded="Browser_Loaded" ScrollViewer.HorizontalScrollBarVisibility="Disabled" local:HtmlStringBinding.HtmlString="{Binding ActiveItem.Body}" Name="Browser"/>
+    <phone:WebBrowser IsScriptEnabled="True" Navigating="Browser_Navigating" ScrollViewer.HorizontalScrollBarVisibility="Disabled" local:HtmlStringBinding.HtmlString="{Binding ActiveItem.Body}" Name="Browser"/>
  
 </phone:PhoneApplicationPage>

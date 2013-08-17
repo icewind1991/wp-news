@@ -6,7 +6,9 @@ body {
 	background-color: black;
 	color: white;
 	width:100%;
-	overflow:hidden
+    overflow-x: hidden;
+    box-sizing: border-box;
+	word-wrap: 		break-word !important;
 }
 
 a {
@@ -27,8 +29,8 @@ blockquote, iframe, video, div, table, tbody, tr, td, pre, code, blockquote, p, 
 	height:		auto !important;
 	max-width:	100% !important;
 
-	margin-left:	4px;
-	margin-right:	4px;
+	margin-left:	2px;
+	margin-right:	2px;
 }
 
 table {
@@ -50,9 +52,6 @@ pre, code, blockquote, p, em, b {
 	word-wrap: 		break-word		!important;
 }
 
-body {
-	word-wrap: 		break-word !important;
-}
 </style>
 </head>
 <body>
@@ -71,6 +70,12 @@ for (var i = 0; i < images.length; i++) {
             this.width = 290;
         }
     }
+}
+
+//open links in browser
+var links, images = document.getElementsByTagName("a");
+for (var i = 0; i < links.length; i++) { 
+    links[i].setAttribute('target', '_blank');
 }
 </script>
 </body>
